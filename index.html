@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Celebración 88 Años - Alejita</title>
+    <title>Celebración 88 Años - Alejandría</title>
     <link href="https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;1,300;1,400&family=Allura&family=Marcellus&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Upright:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -971,7 +971,7 @@
 
                 <!-- Subtítulo -->
                 <p class="subtitle">
-                    CONTAMOS CON TU ASISTENCIA, NO FALTES
+                    NO FALTES, CONTAMOS CON TU PRESENCIA
                 </p>
 
                 <!-- Divisor -->
@@ -980,7 +980,7 @@
                 </div>
 
                 <!-- Nombre de la homenajeada -->
-                <h2 class="honoree-name">Alejita</h2>
+                <h2 class="honoree-name">AlejÍTA</h2>
 
                 <!-- Divisor -->
                 <div class="elegant-divider">
@@ -990,7 +990,7 @@
                 <!-- Display de edad -->
                 <div class="age-display">
                     <div class="age-number">88</div>
-                    <div class="age-label">Años de Felicidad</div>
+                    <div class="age-label">Años de FELCIDAD</div>
                 </div>
 
                 <!-- Divisor -->
@@ -1165,54 +1165,107 @@
         // ==================== AUDIO CONTROL ====================
         const audio = document.getElementById('backgroundMusic');
         audio.volume = 0.3;
-        let musicPlaying = false;
+        let musicStarted = false;
 
-        // Función para reproducir música
-        function playMusic() {
-            if (audio.paused) {
+        // Crear pantalla de inicio elegante
+        const startScreen = document.createElement('div');
+        startScreen.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.3), rgba(0, 0, 0, 0.95));
+            backdrop-filter: blur(10px);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+        `;
+
+        const startButton = document.createElement('div');
+        startButton.innerHTML = `
+            <div style="text-align: center;">
+                <div style="font-size: 80px; margin-bottom: 30px; animation: pulse 2s ease-in-out infinite;">🎵</div>
+                <div style="font-family: 'Cinzel Decorative', serif; font-size: 2.5rem; color: #D4AF37; margin-bottom: 20px; text-shadow: 0 0 30px rgba(212, 175, 55, 0.8);">Celebración de Alejandría</div>
+                <div style="font-family: 'Crimson Pro', serif; font-size: 1.5rem; color: #F4E4C1; margin-bottom: 40px;">88 Años de Felicidad</div>
+                <div style="
+                    padding: 20px 50px;
+                    background: linear-gradient(135deg, #D4AF37, #F4E4C1);
+                    border: 2px solid #D4AF37;
+                    border-radius: 50px;
+                    font-family: 'Crimson Pro', serif;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    color: #3A2F28;
+                    box-shadow: 0 10px 40px rgba(212, 175, 55, 0.5);
+                    animation: buttonPulse 2s ease-in-out infinite;
+                    display: inline-block;
+                ">
+                    ✨ Toca para Ingresar ✨
+                </div>
+            </div>
+        `;
+
+        startScreen.appendChild(startButton);
+        document.body.appendChild(startScreen);
+
+        // Agregar animaciones
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); opacity: 0.8; }
+                50% { transform: scale(1.2); opacity: 1; }
+            }
+            @keyframes buttonPulse {
+                0%, 100% { transform: scale(1); box-shadow: 0 10px 40px rgba(212, 175, 55, 0.5); }
+                50% { transform: scale(1.05); box-shadow: 0 15px 50px rgba(212, 175, 55, 0.8); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        // Función para iniciar música
+        function startMusic() {
+            if (!musicStarted) {
                 audio.play()
                     .then(() => {
-                        console.log('✓ MÚSICA REPRODUCIÉNDOSE CORRECTAMENTE');
-                        musicPlaying = true;
+                        console.log('✓ MÚSICA INICIADA');
+                        musicStarted = true;
+                        
+                        // Ocultar pantalla de inicio
+                        startScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            startScreen.remove();
+                        }, 800);
                     })
                     .catch(error => {
-                        console.log('✗ Error:', error.message);
-                        console.log('→ Haz clic en cualquier parte de la página');
+                        console.log('Error al reproducir:', error);
+                        alert('No se pudo reproducir la música. Verifica que el archivo audio1.mp3 existe.');
                     });
             }
         }
 
-        // Intentar reproducir múltiples veces
-        setTimeout(() => playMusic(), 50);
-        setTimeout(() => playMusic(), 200);
-        setTimeout(() => playMusic(), 500);
-        setTimeout(() => playMusic(), 1000);
-        setTimeout(() => playMusic(), 2000);
-        setTimeout(() => playMusic(), 3000);
+        // Hacer clic en cualquier parte de la pantalla de inicio
+        startScreen.addEventListener('click', startMusic);
+        startScreen.addEventListener('touchstart', startMusic);
 
-        // Eventos de carga
-        window.addEventListener('load', playMusic);
-        document.addEventListener('DOMContentLoaded', playMusic);
-
-        // Con CUALQUIER interacción, activar la música
-        function forcePlayMusic() {
-            playMusic();
-        }
-
-        // Eventos que activan la música
-        document.addEventListener('click', forcePlayMusic);
-        document.addEventListener('touchstart', forcePlayMusic);
-        document.addEventListener('touchend', forcePlayMusic);
-        document.addEventListener('keydown', forcePlayMusic);
-        document.addEventListener('mousemove', forcePlayMusic, { once: true });
-        document.addEventListener('scroll', forcePlayMusic, { once: true });
-        
-        // Verificar estado del audio cada segundo
-        setInterval(() => {
-            if (audio.paused && !audio.ended) {
-                console.log('⚠ Audio pausado, intentando reproducir...');
-            }
-        }, 1000);
+        // Intentar autoplay (por si el navegador lo permite)
+        setTimeout(() => {
+            audio.play()
+                .then(() => {
+                    console.log('✓ Autoplay funcionó');
+                    musicStarted = true;
+                    startScreen.style.opacity = '0';
+                    setTimeout(() => startScreen.remove(), 800);
+                })
+                .catch(() => {
+                    console.log('→ Autoplay bloqueado. Se muestra pantalla de inicio.');
+                });
+        }, 100);
 
         // ==================== EFECTOS INTERACTIVOS ====================
         const card = document.querySelector('.invitation-card');
