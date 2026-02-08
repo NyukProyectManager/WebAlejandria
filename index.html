@@ -882,14 +882,14 @@
 
             <div class="content">
                 <!-- Encabezado -->
-                <div class="header-line">Tiene el Honor de Invitarle</div>
+                <div class="header-line">ESTAS INVITADO</div>
 
                 <!-- Título principal -->
                 <h1 class="main-title">A la Celebración de</h1>
 
                 <!-- Subtítulo -->
                 <p class="subtitle">
-                    Una vida llena de amor, sabiduría y bendiciones
+                    CONTAMOS CON TU PRESENCIA, NO FALTES
                 </p>
 
                 <!-- Divisor -->
@@ -908,7 +908,7 @@
                 <!-- Display de edad -->
                 <div class="age-display">
                     <div class="age-number">88</div>
-                    <div class="age-label">Años de Gracia</div>
+                    <div class="age-label">Años de FELICIDAD</div>
                 </div>
 
                 <!-- Divisor -->
@@ -959,7 +959,7 @@
     </div>
 
     <!-- Audio de fondo -->
-    <audio id="backgroundMusic" loop>
+    <audio id="backgroundMusic" autoplay loop preload="auto">
         <source src="audio1.mp3" type="audio/mpeg">
     </audio>
 
@@ -1063,37 +1063,112 @@
         // ==================== AUDIO CONTROL ====================
         const audio = document.getElementById('backgroundMusic');
         audio.volume = 0.3;
+        let musicPlaying = false;
 
-        // Intentar reproducir automáticamente
+        // Función para reproducir música
         function playMusic() {
-            audio.play().then(() => {
-                console.log('Música reproduciéndose');
-            }).catch(error => {
-                console.log('Autoplay bloqueado, esperando interacción del usuario');
-            });
-        }
-
-        // Iniciar música inmediatamente al cargar la página
-        window.addEventListener('load', () => {
-            playMusic();
-        });
-
-        // También intentar en DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', () => {
-            playMusic();
-        });
-
-        // Fallback: reproducir con cualquier interacción del usuario
-        let musicStarted = false;
-        function ensureMusic() {
-            if (!musicStarted && audio.paused) {
-                playMusic();
-                musicStarted = true;
+            if (!musicPlaying) {
+                audio.play()
+                    .then(() => {
+                        console.log('✓ Música reproduciéndose');
+                        musicPlaying = true;
+                        hideMusicButton();
+                    })
+                    .catch(error => {
+                        console.log('✗ Autoplay bloqueado:', error);
+                        showMusicButton();
+                    });
             }
         }
 
-        ['click', 'touchstart', 'scroll', 'keydown', 'mousemove'].forEach(event => {
-            document.addEventListener(event, ensureMusic, { once: true });
+        // Crear botón de música flotante
+        const musicButton = document.createElement('button');
+        musicButton.innerHTML = '🎵 Reproducir Música';
+        musicButton.style.cssText = `
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #D4AF37, #F4E4C1);
+            border: 2px solid #D4AF37;
+            border-radius: 50px;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #3A2F28;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s ease;
+            display: none;
+            animation: pulseButton 2s ease-in-out infinite;
+        `;
+
+        // Agregar estilos de animación para el botón
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulseButton {
+                0%, 100% { 
+                    transform: scale(1);
+                    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+                }
+                50% { 
+                    transform: scale(1.05);
+                    box-shadow: 0 12px 35px rgba(212, 175, 55, 0.6);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        musicButton.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.1)';
+            this.style.boxShadow = '0 15px 40px rgba(212, 175, 55, 0.7)';
+        });
+
+        musicButton.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = '0 8px 25px rgba(212, 175, 55, 0.4)';
+        });
+
+        musicButton.addEventListener('click', function() {
+            playMusic();
+        });
+
+        document.body.appendChild(musicButton);
+
+        function showMusicButton() {
+            musicButton.style.display = 'block';
+        }
+
+        function hideMusicButton() {
+            musicButton.style.display = 'none';
+        }
+
+        // Intentar reproducir inmediatamente
+        setTimeout(() => playMusic(), 100);
+        setTimeout(() => playMusic(), 500);
+        setTimeout(() => playMusic(), 1000);
+
+        // Eventos de carga
+        window.addEventListener('load', playMusic);
+        document.addEventListener('DOMContentLoaded', playMusic);
+
+        // Eventos de interacción del usuario
+        const interactionEvents = ['click', 'touchstart', 'touchend', 'scroll', 'keydown', 'mousemove', 'mousedown'];
+        
+        interactionEvents.forEach(eventType => {
+            document.addEventListener(eventType, function startMusic() {
+                playMusic();
+                // Remover el listener después de la primera interacción
+                document.removeEventListener(eventType, startMusic);
+            }, { once: true, passive: true });
+        });
+
+        // Intentar reproducir cuando la página sea visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                playMusic();
+            }
         });
 
         // ==================== EFECTOS INTERACTIVOS ====================
