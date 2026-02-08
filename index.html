@@ -1230,24 +1230,23 @@
 
         // Función para iniciar música
         function startMusic() {
-            if (!musicStarted) {
-                audio.play()
-                    .then(() => {
-                        console.log('✓ MÚSICA INICIADA');
-                        musicStarted = true;
-                        
-                        // Ocultar pantalla de inicio
-                        startScreen.style.opacity = '0';
-                        setTimeout(() => {
-                            startScreen.remove();
-                        }, 800);
-                    })
-                    .catch(error => {
-                        console.log('Error al reproducir:', error);
-                        alert('No se pudo reproducir la música. Verifica que el archivo audio1.mp3 existe.');
-                    });
-            }
-        }
+    if (!musicStarted) {
+
+        // Intentar reproducir música,
+        // pero entrar aunque falle
+        audio.play().catch(() => {
+            console.log("Audio bloqueado por el navegador, pero entrando de todos modos.");
+        });
+
+        musicStarted = true;
+
+        startScreen.style.opacity = '0';
+        setTimeout(() => {
+            startScreen.remove();
+        }, 800);
+    }
+}
+        
 
         // Hacer clic en cualquier parte de la pantalla de inicio
         startScreen.addEventListener('click', startMusic);
